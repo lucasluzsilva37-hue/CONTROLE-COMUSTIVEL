@@ -12,7 +12,7 @@ col1, col2 = st.columns([1, 2])
 
 with col1:
     st.subheader("Registrar Abastecimento")
-    with st.form("add_abastecimento"):
+    with st.form("add_abastecimento", clear_on_submit=True):
         data = st.date_input("Data do abastecimento", datetime.date.today())
         valor = st.number_input("Valor total pago (R$)", min_value=0.0, format="%.2f")
         preco_litro = st.number_input("Preço por litro (R$)", min_value=0.0, format="%.3f")
@@ -24,6 +24,7 @@ with col1:
             novo_registro = pd.DataFrame({'data': [data], 'valor': [valor], 'preco_litro': [preco_litro], 'km': [km], 'litros': [litros]})
             st.session_state.historico = pd.concat([st.session_state.historico, novo_registro], ignore_index=True)
             st.success("Abastecimento registrado!")
+            st.rerun()
 
 with col2:
     st.subheader("Métricas e Histórico")
@@ -42,8 +43,14 @@ with col2:
         m2.metric("Total Gasto", f"R$ {total_gasto:.2f}")
         m3.metric("Total Litros", f"{total_litros:.2f} L")
 
-        st.write("### Histórico Recente")
-        st.dataframe(st.session_state.historico.tail())
+        st.write("### Histórico e Edição")
+        st.info("Para deletar um registro, selecione a linha usando o checkbox à esquerda e pressione Delete no seu teclado.")
+        
+        st.session_state.historico = st.data_editor(
+            st.session_state.historico,
+            num_rows="dynamic"
+        )
+        st.session_state.historico = st.session_state.historico.dropna(how='all')
 
         st.subheader("📊 Gráfico de Gastos")
         df_plot = st.session_state.historico.copy()
