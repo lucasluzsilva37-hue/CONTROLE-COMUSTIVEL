@@ -1,3 +1,4 @@
+python
 import streamlit as st
 import pandas as pd
 import datetime
@@ -19,7 +20,7 @@ with col1:
         km = st.number_input("Quilometragem (km)", min_value=0.0, format="%.1f")
         submit = st.form_submit_button("Registrar")
 
-        if submit and valor > 0 and preco_litro > 0 and km > 0:
+        if submit and valor &gt; 0 and preco_litro &gt; 0 and km &gt; 0:
             litros = valor / preco_litro
             novo_registro = pd.DataFrame({'data': [data], 'valor': [valor], 'preco_litro': [preco_litro], 'km': [km], 'litros': [litros]})
             st.session_state.historico = pd.concat([st.session_state.historico, novo_registro], ignore_index=True)
@@ -36,7 +37,7 @@ with col2:
         ultima_km = st.session_state.historico['km'].max()
         km_rodados = ultima_km - primeira_km
         
-        custo_km = total_gasto / km_rodados if km_rodados > 0 else 0
+        custo_km = total_gasto / km_rodados if km_rodados &gt; 0 else 0
         
         m1, m2, m3 = st.columns(3)
         m1.metric("Custo Médio (R$/km)", f"R$ {custo_km:.2f}")
@@ -52,7 +53,7 @@ with col2:
         )
         st.session_state.historico = st.session_state.historico.dropna(how='all')
 
-        st.subheader("📊 Gráfico de Gastos")
+        st.subheader("👨‍📊 Gráfico de Gastos")
         df_plot = st.session_state.historico.copy()
         df_plot['data'] = pd.to_datetime(df_plot['data'])
         df_mensal = df_plot.set_index('data').resample('M')['valor'].sum().reset_index()
