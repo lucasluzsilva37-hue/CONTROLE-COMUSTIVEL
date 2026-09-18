@@ -76,7 +76,7 @@ with col2:
             }
         )
         
-        st.session_state.historico = dados_編集.dropna(how='all')
+        st.session_state.historico = dados_editados.dropna(how='all')
 
         st.subheader("📊 Gastos Mensais")
         df_grafico = st.session_state.historico.copy()
